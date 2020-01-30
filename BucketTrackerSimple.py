@@ -58,8 +58,6 @@ bt = NetworkTables.getTable("BucketTracking")
 bt.putString("BucketVisionState", "Starting")
 bt.putNumber("trackerTime", time.perf_counter())
 
-od = NetworkTables.getTable("BucketWheelOdometry")
-
 # Declare RealSense pipeline, encapsulating the actual device and sensors
 pipe = rs.pipeline()
 
