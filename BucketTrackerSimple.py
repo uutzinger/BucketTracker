@@ -5,7 +5,9 @@
 # Bucket Tracker
 # Uses Intel Realsense Tracking Camera T265 to obtain pose, position and 
 # velocity.
-# Publshes results in Network Tables
+# Publishes results in Network Tables
+# This code is based on the intel realsense python wrapper examples and 
+# some parts of BucketVision.
 #
 # Urs Utiznger
 # 2020

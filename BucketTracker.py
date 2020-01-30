@@ -6,7 +6,10 @@
 # velocity.
 # Utilized robot wheel odometry
 # Publshes results in Network Tables
-#
+# This code is based on the intel realsense python wrapper examples and 
+# some parts of BucketVision.
+# 
+# Not tested not completed.
 # Urs Utiznger
 # 2019, 2020
 ###############################################################################
