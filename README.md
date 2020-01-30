@@ -100,7 +100,7 @@ protoc --version
 ```
 
 ## Install `TBB`
-Install intel thread building blocks from pre built libraries.
+Install intel threading building blocks from pre built libraries.
 
 ```
 cd ~
