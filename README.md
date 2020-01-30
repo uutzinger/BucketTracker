@@ -6,8 +6,8 @@ You will also need to read
 https://github.com/IntelRealSense/librealsense/blob/master/doc/t265.md
 to understand how to calibrate the wheel odometer portion. The required part is the Appendix. We need to point the camera upwards so that other robots defending us does not interfere with operation and we need to know where camera is placed in respect to robot origin. See the figure in the appendix in above link.
 
-- BucketTrackerSinmple.py: this program should update postion, valocity, pitch, roll and yaw to network tables
-- BucketTracker.py: this program is work in progress and should include wheel otometry from Robot. 
+- BucketTrackerSinmple.py: this program should update postion, velocity, pitch, roll and yaw to network tables
+- BucketTracker.py: this program is work in progress and should include wheel odometry from Robot. Software team would need to provide wheel velocity of the two drop down center wheels and designers the position of the camrea in respect to the center wheel and the angle of the camera in respect to horizontal. Camera works best if pointed upwards, making sure other robots do not crowed its field of view and it still sees fixed points in its vincinity. 
 
 Urs Utzinger 2020
 
@@ -41,17 +41,16 @@ sudo apt-get install -y libglu1-mesa libglu1-mesa-dev mesa-utils mesa-utils-extr
 
 ## Update pip for python packages
 ```
-$ wget https://bootstrap.pypa.io/get-pip.py
-$ sudo python get-pip.py
-$ sudo python3 get-pip.py
-$ sudo rm -rf ~/.cache/pip
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python get-pip.py
+sudo python3 get-pip.py
+sudo rm -rf ~/.cache/pip
 ```
 
 ## Install Network Tables
 ```
 pip3 install pynetworktables
 ```
-
 
 ## Install `OpenCV`
 You can build from source code, but it takes at lot of much time. In this case, we will use pre-build version to save time.
@@ -67,7 +66,6 @@ sudo apt-get install libfontconfig1-dev libcairo2-dev
 sudo apt-get install libgdk-pixbuf2.0-dev libpango1.0-dev
 sudo apt-get install libgtk2.0-dev libgtk-3-dev
 sudo apt-get install libatlas-base-dev gfortran
-
 sudo apt-get install libhdf5-dev libhdf5-serial-dev libhdf5-103
 sudo apt-get install libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5
 sudo apt-get install python3-dev
@@ -164,7 +162,7 @@ export PYTHONPATH=$PYTHONPATH:/usr/local/lib
 source ~/.bashrc
 ```
 
-## Eanable OpneGL on Raspberry Pi
+## Enable OpneGL on Raspberry Pi
 ```
 sudo apt-get install python-opengl
 sudo -H pip3 install pyopengl
