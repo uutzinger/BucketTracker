@@ -18,13 +18,16 @@
 ###############################################################################
 
 from __future__ import print_function
+
 import sys
 import time
 import argparse
 import math
-import pyrealsense2 as rs
+import threading
 import numpy as np
 import cv2
+import pyrealsense2 as rs
+
 from networktables import NetworkTables
 
 def connectionListener(connected, info):
@@ -38,23 +41,24 @@ def connectionListener(connected, info):
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-ap = argparse.ArgumentParser(description='IP number.')
-ap.add_argument('-i', '--ip', dest='ip', default="10.41.83.2", help='Team IP number or localhost.')
-args = vars(ap.parse_args())
+ap = argparse.ArgumentParser()
+ap.add_argument('-ip', '--ip_address', default='localhost', required=False, help='Team IP number or localhost.')
+args = ap.parse_args()
 
 cond = threading.Condition()
 notified = [False]
-NetworkTables.initialize(server=ip)
+NetworkTables.initialize(server=args.ip_address)
 NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
 # if not connected then block and wait
-with cond:
-    print("Waiting")
-    if not notified[0]:
-        cond.wait()
+# Uncomment to run with Network Tables
+#with cond:
+#    print("Waiting")
+#    if not notified[0]:
+#        cond.wait()
 
 sd = NetworkTables.getTable("SmartDashboard")
-dsTime = sd.getNumber("dsTime", -1))
+# robotTime = sd.getNumber("dsTime", -1))
 
 bt = NetworkTables.getTable("BucketTracking")
 bt.putString("BucketVisionState", "Starting")
@@ -64,38 +68,50 @@ bt.putNumber("trackerTime", time.perf_counter())
 pipe = rs.pipeline()
 
 # Build config object and request pose dataPPP
-cfg = rs.config()parse_args
+cfg = rs.config()
 cfg.enable_stream(rs.stream.pose)
 
 # Start streaming with requested config
 pipe.start(cfg)
 
-while True:
-    # Wait for the next set of frames from the camera
-    frames = pipe.wait_for_frames()
+try:
+    while (True):
+        # Wait for the next set of frames from the camera
+        frames = pipe.wait_for_frames()
 
-    # Fetch pose frame
-    pose = frames.get_pose_frame()
-    if pose:
-        # Print some of the pose data to the terminal
-        data = pose.get_pose_data()
+        # Fetch pose frame
+        pose = frames.get_pose_frame()
+        if pose:
+            # Print some of the pose data to the terminal
+            data = pose.get_pose_data()
 
-        w =  data.rotation.w
-        x = -data.rotation.z
-        y =  data.rotation.x
-        z = -data.rotation.y
+            w =  data.rotation.w
+            x = -data.rotation.z
+            y =  data.rotation.x
+            z = -data.rotation.y
+            pitch =  -math.asin(2.0 * (x*z - w*y)) * 180.0 / math.pi
+            roll  =  math.atan2(2.0 * (w*x + y*z), w*w - x*x - y*y + z*z) * 180.0 / math.pi
+            yaw   =  math.atan2(2.0 * (w*z + x*y), w*w + x*x - y*y - z*z) * 180.0 / math.pi
 
-        pitch =  -math.asin(2.0 * (x*z - w*y)) * 180.0 / math.pi
-        roll  =  math.atan2(2.0 * (w*x + y*z), w*w - x*x - y*y + z*z) * 180.0 / math.pi
-        yaw   =  math.atan2(2.0 * (w*z + x*y), w*w + x*x - y*y - z*z) * 180.0 / math.pi
-
-        bt.putNumber("trackerTime", time.perf_counter())
-        bt.putNumber("Frame",       pose.frame_number)
-        bt.putNumber("Position",    data.translation)
-        bt.putNumber("Velocity",    data.velocity)
-        bt.putNumber("Acceleration",data.acceleration)
-        bt.putNumber("Pitch",       pitch)
-        bt.putNumber("Roll",        roll)
-        bt.putNumber("Yaw",         yaw)
-
-pipe.stop()
+            bt.putNumber("trackerTime",          time.perf_counter())
+            bt.putNumber("Frame",                pose.frame_number)
+            bt.putNumber("Position_x",           data.translation.x)
+            bt.putNumber("Position_y",           data.translation.y)
+            bt.putNumber("Position_z",           data.translation.z)
+            bt.putNumber("Velocity_x",           data.velocity.x)
+            bt.putNumber("Velocity_y",           data.velocity.y)
+            bt.putNumber("Velocity_z",           data.velocity.z)
+            bt.putNumber("Acceleration_x",       data.acceleration.x)
+            bt.putNumber("Acceleration_y",       data.acceleration.y)
+            bt.putNumber("Acceleration_z",       data.acceleration.z)
+            bt.putNumber("AngularVelocity_x",    data.angular_velocity.x)
+            bt.putNumber("AngularVelocity_y",    data.angular_velocity.y)
+            bt.putNumber("AngularVelocity_z",    data.angular_velocity.z)
+            bt.putNumber("AngularAcceleration_x",data.angular_acceleration.x)
+            bt.putNumber("AngularAcceleration_y",data.angular_acceleration.y)
+            bt.putNumber("AngularAcceleration_z",data.angular_acceleration.z)
+            bt.putNumber("Pitch", pitch)
+            bt.putNumber("Roll",  roll)
+            bt.putNumber("Yaw",   yaw)
+finally:
+    pipe.stop()
