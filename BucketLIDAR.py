@@ -48,7 +48,7 @@ class lidar(Thread):
             self.logger.log(logging.CRITICAL, "Status:Failed to open lidar!")
 
         self.lidar.stop_motor()
-        self.scan_data = [0]*360
+        self.scan = [0]*360
 
 
         # Threading Locks, Events
@@ -96,14 +96,19 @@ class lidar(Thread):
                 last_fps_time = current_time
 
             with self.lidar_lock:
-                scan = lidar.iter_scans(max_buf_meas=500, min_len=360)
+                raw_scan = lidar.iter_scans(max_buf_meas=500, min_len=360)
 
-            for (_, angle, distance) in scan:
-                self.scan_data[min([359, floor(angle)])] = distance
+            ordered_scan = [0]*360
+            for (_, angle, distance) in raw_scan:
+                ordered_scan[min([359, floor(angle)])] = distance
             num_scans += 1
 
+            self.scan = ordered_scan
+
+            # creating point could data`
+            # not finihed
             for angle in range(360):
-                distance = self.scan_data[angle]
+                distance = self.scan[angle]
                 if distance > 0:   
                     radians = angle * pi / 180.0
                     x = distance * cos(radians)
@@ -141,16 +146,3 @@ class lidar(Thread):
     def new_scan(self, val):
         """ override wether new scan is available """
         self._new_scan = val
-
-
-#pylint: disable=redefined-outer-name,global-statement
-
-
-
-try:
-    print(lidar.info)
-1968
-except KeyboardInterrupt:
-    print('Stoping.')
-lidar.stop()
-lidar.disconnect()
