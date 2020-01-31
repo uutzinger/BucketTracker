@@ -185,7 +185,9 @@ realsense-viewer
 
 ## Bucket Lidar
 Attempt to integrated Slamtec RPLidar
-Lidar Overview: https://is.muni.cz/th/q0y8y/dp.pdf
+Lidar Overview: 
+https://is.muni.cz/th/q0y8y
+https://is.muni.cz/th/q0y8y/dp.pdf
 
 Libraries for point could formatting and processing:
 libLAS https://liblas.org/
