@@ -182,3 +182,25 @@ Connected camera to the pi and open terminal
 ```
 realsense-viewer
 ```
+
+## Bucket Lidar
+Attempt to integrated Slamtec RPLidar
+Lidar Overview: https://is.muni.cz/th/q0y8y/dp.pdf
+
+Libraries for point could formatting and processing:
+libLAS https://liblas.org/
+PCL: http://www.pointclouds.org/
+Laspy https://github.com/laspy/laspy
+
+```
+pip3 install adafruit_rplidar
+pip3 install laspy liblas
+
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key 19274DEF
+sudo echo "deb http://ppa.launchpad.net/v-launchpad-jochen-sprickerhof-de/pcl/ubuntu maverick main" >> /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install libpcl-all
+
+pip3 install python-pcl
+```
+
