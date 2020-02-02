@@ -4,10 +4,13 @@ This setup guide is based on https://github.com/IntelRealSense/librealsense/blob
 
 You will also need to read 
 https://github.com/IntelRealSense/librealsense/blob/master/doc/t265.md
-to understand how to calibrate the wheel odometer portion. The required part is the Appendix. We need to point the camera upwards so that other robots defending us does not interfere with operation and we need to know where camera is placed in respect to robot origin. See the figure in the appendix in above link.
+to understand how to calibrate the wheel odometer portion. The required part is the appendix. Best view direction of camera is upwards or downwards so that other moving objects do not interfere with the trackin. We need to know where he camera is placed in respect to the robot reference point. See the figure in the appendix in above link.
 
-- BucketTrackerSinmple.py: this program should update postion, velocity, pitch, roll and yaw to network tables
-- BucketTracker.py: this program is work in progress and should include wheel odometry from Robot. Software team would need to provide wheel velocity of the two drop down center wheels and designers the position of the camrea in respect to the center wheel and the angle of the camera in respect to horizontal. Camera works best if pointed upwards, making sure other robots do not crowed its field of view and it still sees fixed points in its vincinity. 
+- BucketTrackerSimple.py: this program should update postion, velocity, pitch, roll and yaw to network tables
+
+- BucketTracker.py: this program is work in progress and should include wheel odometry from Robot. Software team would need to provide wheel velocity of the two drop down center wheels and designers the position of the camrea in respect to the center wheel and the angle of the camera in respect to horizontal. Camera works likely best if pointed upwards. 
+
+- BucketLIDAR.py: Attempt for LIDAR driver that provides reference wall locations and runs as separate thread. LIDAR likely works best if robot velocity is low.
 
 Urs Utzinger 2020
 
@@ -185,13 +188,15 @@ realsense-viewer
 
 ## Bucket Lidar
 Attempt to integrated Slamtec RPLidar
-Lidar Overview: 
-https://is.muni.cz/th/q0y8y
-https://is.muni.cz/th/q0y8y/dp.pdf
+Lidar Overview: https://is.muni.cz/th/q0y8y
+Dissertation: https://is.muni.cz/th/q0y8y/dp.pdf
 
 Libraries for point could formatting and processing:
+
 libLAS https://liblas.org/
+
 PCL: http://www.pointclouds.org/
+
 Laspy https://github.com/laspy/laspy
 
 ```
